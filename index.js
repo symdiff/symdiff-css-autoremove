@@ -1,22 +1,24 @@
-var css = require('css');
+var css = require('css'),
+    extend = require('extend');
 
-// this needs some more thought as it might alter
-// the behavior of a selector:
-// a .remove -> a
-function stripClassesFromSelector(classes) {
-    return function(selector) {
-        var result = selector;
-        classes
-            .forEach(function(clazz) {
-                result = result.replace('.' + clazz, '');
-            });
-        return result;
-    };
+function defaultReplaceSelector(selector, classes) {
+    var result = selector;
+    classes.forEach(function(clazz) {
+        if (selector.indexOf('.' + clazz) >= 0) {
+            result = '';
+            return false;
+        }
+    });
+    return result;
 }
 
 function symdiffRemoveCSS(cssString, classesToRemove, options) {
+    options = extend({
+        replaceSelectorFn: defaultReplaceSelector
+    }, options);
+
     // try to read file content
-    var ast;
+    var ast;    
     try {
         ast = css.parse(cssString);
     } catch(e) {
@@ -29,8 +31,8 @@ function symdiffRemoveCSS(cssString, classesToRemove, options) {
     }
 
     /*
-     * If the selector is equal to .[class], remove the whole node.
-     * Otherwise remove the class from the selector.
+     * Remove all selectors containg a class to remove.
+     * If there is no selector left afterwards, delete rule.
      */
     
     var rulesToRemove = [];
@@ -41,7 +43,9 @@ function symdiffRemoveCSS(cssString, classesToRemove, options) {
         .forEach(function(rule) {
             var newSelectors = rule
                                 .selectors
-                                .map(stripClassesFromSelector(classesToRemove))
+                                .map(function(selector) {
+                                    return options.replaceSelectorFn(selector, classesToRemove);
+                                })
                                 .filter(function(selector) {
                                     return selector.length > 0;
                                 });

@@ -17,7 +17,8 @@
   "author": "Nikolaus Piccolotto <hello@npiccolotto.com>",
   "license": "Apache 2.0",
   "dependencies": {
-    "css": "2.2.0"
+    "css": "2.2.0",
+    "extend": "3.0.0"
   },
   "devDependencies": {
     "chai": "2.3.0",
