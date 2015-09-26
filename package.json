@@ -1,6 +1,6 @@
 {
   "name": "symdiff-css-autoremove",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Removes classes from a CSS file.",
   "main": "index.js",
   "repository": {
