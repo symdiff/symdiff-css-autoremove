@@ -1,6 +1,14 @@
 var css = require('css'),
     extend = require('extend');
 
+/**
+ * Default selector replacement function discards the selector if
+ * it contains one of the classes.
+ *
+ * @param  {String} selector The selector to process
+ * @param  {Array} classes The classes to remove
+ * @return {String} The new selector
+ */
 function defaultReplaceSelector(selector, classes) {
     var result = selector;
     classes.forEach(function(clazz) {
@@ -22,7 +30,6 @@ function symdiffRemoveCSS(cssString, classesToRemove, options) {
     try {
         ast = css.parse(cssString);
     } catch(e) {
-        // TODO better to throw?
         return null;
     }
 
@@ -62,7 +69,7 @@ function symdiffRemoveCSS(cssString, classesToRemove, options) {
         return rulesToRemove.indexOf(rule) < 0;
     });
 
-    return css.stringify(ast, options || {});
+    return css.stringify(ast, options);
 }
 
 module.exports = symdiffRemoveCSS;

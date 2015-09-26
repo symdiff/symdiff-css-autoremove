@@ -26,6 +26,10 @@ describe('The CSS autoremover', function() {
         expect(result.indexOf('keep-me')).to.be.above(0);
     });
 
+    it('should process media queries', function() {
+
+    });
+
     it('should accept a custom replacement function', function() {
         function custom(selector) {
             return selector;
